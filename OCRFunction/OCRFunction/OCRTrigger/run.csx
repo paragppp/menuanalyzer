@@ -78,9 +78,7 @@ private static string GetBingSearchJson(string res)
         menuItems.menus.Add(menuItem);
     }
 
-    JObject obj = JObject.FromObject(menuItems);
-
-    string response = obj.ToString();
+    string response = JsonConvert.SerializeObject(menuItems);
 
     return response;
 }
@@ -93,14 +91,6 @@ private static string getImageUrl(string query)
     client.DefaultRequestHeaders.Add(appSettings["accessKeyName"], appSettings["imageSearchKeyValue"]);
 
     var uri = appSettings["imageSearchURL"] + query + "&count=1";
-
-    /*Task<string> response = client.GetStringAsync(uri);
-
-    string result = response.Result;
-
-    string part1 = result.Substring(result.IndexOf($"\"contentUrl\": \"") + $"\"contentUrl\": \"".Length);
-    string part2 = part1.Substring(0, part1.IndexOf($"\", \"")).Replace($"\\","");
-    */
 
     WebClient wc = new WebClient();
 
