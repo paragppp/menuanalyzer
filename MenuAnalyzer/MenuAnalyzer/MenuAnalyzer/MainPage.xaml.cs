@@ -18,11 +18,27 @@ namespace MenuAnalyzer
         public MainPage()
         {
             InitializeComponent();
+
+            
         }
 
         private void Take_Photo_Clicked(object sender, EventArgs e)
         {
-            TakePhoto();
+            //TakePhoto();
+            var assembly = typeof(MainPage).GetTypeInfo().Assembly;
+            Stream stream = assembly.GetManifestResourceStream("MenuAnalyzer.UWP.sample.json");
+
+            string input = "";
+
+            using (var reader = new System.IO.StreamReader(stream))
+            {
+                input = reader.ReadToEnd();
+            }
+
+            MenuItems mi = Newtonsoft.Json.JsonConvert.DeserializeObject<MenuItems>(input);
+
+            MyList.ItemsSource = mi.menus;
+            MyList.IsVisible = true;
         }
 
         private async void TakePhoto()
@@ -69,7 +85,7 @@ namespace MenuAnalyzer
                                 myActivityIndicator.IsRunning = false;
                                 myActivityIndicator.IsVisible = false;
                             }
-                            catch (Exception ex)
+                            catch
                             {
                                 myActivityIndicator.IsRunning = false;
                                 myActivityIndicator.IsVisible = false;
@@ -84,6 +100,14 @@ namespace MenuAnalyzer
         private void Clear_Clicked(object sender, EventArgs e)
         {
             MyList.IsVisible = false;
+        }
+
+        private void TapGestureRecognizer_Tapped(object sender, EventArgs e)
+        {
+            //NavigationPage page = new NavigationPage(new FullImage(((Image)sender).Source));
+
+            Navigation.PushAsync(new FullImage(((Image)sender).Source));
+            //DisplayAlert($"image clicked: {sender}","clicked","Ok");
         }
     }
 }
